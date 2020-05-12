@@ -1,4 +1,5 @@
-# Computational Thinking
+ Computational Thinking
+ ======================
 
 1. **분해**: 복잡한 문제를 작은 문제로 나눈다.
 2. **패턴 인식**: 문제 안에서 유사성을 발견한다.
@@ -13,7 +14,8 @@
 
 
 
-# Short-Circuit Evalution
+Short-Circuit Evalution
+=======================
 
 논리 연산에서 중요한 부분이 **단락 평가(short-circuit evalution)**이다. 단락 평가는 첫 번째 값만으로 결과가 확실할 때 두 번째 값은 확인(평가)하지 않는 방법을 말한다. 즉, `and` 연산자는 두 값이 모두 참이라야 참이므로 첫 번째 값이 거짓이면 두 번째 값은 확인하지 않고 바로 거짓으로 결정한다.
 
@@ -45,3 +47,37 @@ True and 'Python'               # 'Python'
 'Python' and True               # True
 'Python' and False              # False
 ```
+
+
+
+딕셔너리의 키의 순서
+====================
+
+파이썬 3.5 이하에서는 키의 순서가 정해져 있지 않다. 하지만, 파이썬 3.6부터는 딕셔너리를 생성했을 때와 키를 추가했을 때의 순서를 따르므로 순서가 보장된다.
+
+
+
+```python
+# 파이썬 3.6
+>>> lux = {'health': 490, 'health': 800, 'mana': 334, 'melee': 550, 'armor': 18.72}
+>>> lux
+{'health': 490, 'health': 800, 'mana': 334, 'melee': 550, 'armor': 18.72}
+```
+
+```python
+# 파이썬 3.5
+>>> lux = {'health': 490, 'health': 800, 'mana': 334, 'melee': 550, 'armor': 18.72}
+>>> lux
+{'armor': 18.72, 'health': 800, 'health': 490, 'melee': 550}
+```
+
+만약 파이썬 3.5 이하에서 키의 순서가 보장되도록 만들려면 `collections` 모듈의 `OrderedDict`를 사용하면 된다.
+
+```python
+>>> from collections import OrderedDict
+>>> lux = OrderedDict({'health': 490, 'health': 800, 'mana': 334, 'melee': 550, 'armor': 18.72})
+>>> lux
+OrderedDict([('health', 800), ('mana', 334), ('melee', 550), ('armor', 18.72)])
+```
+
+사실 `OrderedDict`는 키의 순서를 보장하기 위해 사용하는 것이 아니라, 딕셔너리를 키로 정렬하고 싶을 때 사용한다. 그래서 파이썬 3.6에도 여전히 `OrderedDict`가 남아있다.
