@@ -102,3 +102,36 @@ def append_number(n):           # 함수 실행이 외부 상태에 영향을 �
 
 append_number(4)
 ```
+
+
+
+First-Class Object
+==================
+
+일급 객체(first-class object)란 다음 조건을 만족하는 객체를 뜻한다.
+
+* 변수나 데이터 구조에 넣을 수 있어야 한다.
+* 매개변수에 전달할 수 있어야 한다.
+* 반환값으로 사용할 수 있어야 한다.
+
+특히 일급 함수(first-class function)는 일급 객체의 조건을 만족하면서 실행 중(run-time)에 함수를 생성할 수 있어야 한다. 파이썬에서는 `def` 안에서 `def`로 함수를 만들거나, `lambda`를 사용하여 실행 중에 함수를 생성할 수 있으므로 파이썬의 함수는 일급 함수이다.
+
+
+다른 언어에 있는 `switch` 문법은 사용할 수 없나?
+------------------------------------------------
+
+파이썬은 `switch` 문법이 없다. 하지만 딕셔너리와 람다 표현식을 사용하면 `switch`처럼 사용할 수는 있다.
+
+```python
+switch = {
+    '+': lambda x, y: x + y,
+    '*': lambda x, y: x * y
+}
+
+x = '+'
+
+try:
+    print(switch[x](10, 20))
+except KeyError:
+    print('default')
+```
