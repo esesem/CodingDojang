@@ -77,3 +77,28 @@ OrderedDict([('health', 800), ('mana', 334), ('melee', 550), ('armor', 18.72)])
 ```
 
 사실 `OrderedDict`는 키의 순서를 보장하기 위해 사용하는 것이 아니라, 딕셔너리를 키로 정렬하고 싶을 때 사용한다. 그래서 파이썬 3.6에도 여전히 `OrderedDict`가 남아있다.
+
+
+
+순수 함수와 비순수 함수
+=======================
+
+순수 함수(pure function)는 함수의 실행이 외부 상태에 영향을 끼치지 않는 함수를 뜻한다. 따라서 순수 함수는 부수 효과(side effect)가 없어야 하고 입력 값이 같으면 언제나 같은 출력 값을 반환한다.
+
+```python
+def add(a, b):          # 함수 실행이 외부 상태에 영향을 끼치지 않음
+    return a + b
+
+print(add(1, 2))
+```
+
+반대로 비순수 함수(impure function)는 수정자 함수(modifier function)라고도 하는데 함수의 실행이 외부 상태에 영향을 끼치는 함수이다.
+
+```python
+number_list = [1, 2, 3]
+
+def append_number(n):           # 함수 실행이 외부 상태에 영향을 끼침
+    number_list.append(n)       # 함수 외부에 있는 number_list의 상태가 바뀜
+
+append_number(4)
+```
