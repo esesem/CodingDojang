@@ -835,63 +835,201 @@ frozenset({frozenset({3, 4}), frozenset({1, 2})})
 
 
 
+# UNIT 29 함수 사용하기
 
+<br>
 
+함수 독스트링 사용하기
+----------------------
 
-
-
-순수 함수와 비순수 함수
------------------------
-
-순수 함수(pure function)는 함수의 실행이 외부 상태에 영향을 끼치지 않는 함수를 뜻한다. 따라서 순수 함수는 부수 효과(side effect)가 없어야 하고 입력 값이 같으면 언제나 같은 출력 값을 반환한다.
+파이썬에서는 함수의 `:`(콜론) 바로 다음 줄에 `""" """`(큰따옴표 세 개)로 문자열을 입력하면 함수에 대한 설명을 넣을 수 있다. 이런 방식의 문자열을 독스트링(문서화 문자열, documentation strings, docstrings)이라고 한다. 단, 독스트링의 윗줄에 다른 코드가 오면 안 된다.
 
 ```python
-def add(a, b):          # 함수 실행이 외부 상태에 영향을 끼치지 않음
+def 함수이름(매개변수):
+    """독스트링"""
+  코드
+
+def 함수이름(매개변수):
+  """
+  여러 줄로 된
+  독스트링
+  """
+  코드
+```
+
+독스트링은 `' '`(작은따옴표), `" "`(큰따옴표), `''' '''`(작은따옴표 세 개)로 만들어도 되지만, 파이썬 코딩 스타일 가이드(PEP 8)에서는 `""" """`(큰따옴표 세 개)를 권장한다.  
+앞에서 만든 `add` 함수에 독스트링으로 설명을 추가해보자.
+
+```python
+# function_documentation_strings.py
+def add(a, b):
+    """이 함수는 a와 b를 더한 뒤 결과를 반환하는 함수이다."""
     return a + b
 
-print(add(1, 2))
+x = add(10, 20)     # 함수를 호출해도 독스트링은 출력되지 않음
+print(x)
 ```
-
-반대로 비순수 함수(impure function)는 수정자 함수(modifier function)라고도 하는데 함수의 실행이 외부 상태에 영향을 끼치는 함수이다.
 
 ```python
-number_list = [1, 2, 3]
-
-def append_number(n):           # 함수 실행이 외부 상태에 영향을 끼침
-    number_list.append(n)       # 함수 외부에 있는 number_list의 상태가 바뀜
-
-append_number(4)
+print(add.__doc__)
 ```
 
+```
+30
+```
 
+이 함수는 `a`와 `b`를 더한 뒤 결과를 반환하는 함수이다.  
+독스트링은 함수의 사용 방법만 기록할 뿐 `add(10, 20)`으로 함수를 호출해도 출력되지 않습니다. 독스트링을 출력하려면 `print(add.__doc__)`와 같이 함수의 `__doc__`을 출력하면 된다.  
+다음과 같이 `help`에 함수를 넣으면 함수의 이름, 매개변수, 독스트링을 도움말 형태로 출력해준다.
 
-First-Class Object
-==================
-
-일급 객체(first-class object)란 다음 조건을 만족하는 객체를 뜻한다.
-
-* 변수나 데이터 구조에 넣을 수 있어야 한다.
-* 매개변수에 전달할 수 있어야 한다.
-* 반환값으로 사용할 수 있어야 한다.
-
-특히 일급 함수(first-class function)는 일급 객체의 조건을 만족하면서 실행 중(run-time)에 함수를 생성할 수 있어야 한다. 파이썬에서는 `def` 안에서 `def`로 함수를 만들거나, `lambda`를 사용하여 실행 중에 함수를 생성할 수 있으므로 파이썬의 함수는 일급 함수이다.
-
-
-다른 언어에 있는 `switch` 문법은 사용할 수 없나?
-------------------------------------------------
-
-파이썬은 `switch` 문법이 없다. 하지만 딕셔너리와 람다 표현식을 사용하면 `switch`처럼 사용할 수는 있다.
+* `help (객체)`
 
 ```python
-switch = {
-    '+': lambda x, y: x + y,
-    '*': lambda x, y: x * y
-}
+Help on function add in module __main__:
 
-x = '+'
-
-try:
-    print(switch[x](10, 20))
-except KeyError:
-    print('default')
+add(a, b)
+    이 함수는 a와 b를 더한 뒤 결과를 반환하는 함수이다.
 ```
+
+독스트링을 적절하게 작성해두면 나중에 본인이 만든 코드를 다른 사람이 사용할 때 좀 더 편리하게 사용할 수 있다.
+
+<br><br>
+
+
+
+# UNIT 33 클로저 사용하기
+
+<br>
+
+네임스페이스
+------------
+
+파이썬에서 변수는 네임스페이스(namespace, 이름공간)에 저장된다. 다음과 같이 `locals` 함수를 사용하면 현재 네임스페이스를 딕셔너리 형태로 출력할 수 있다.
+
+```python
+>>> x = 10
+>>> locals()
+{'__name__': '__main__', '__doc__': None, '__package__': None, '__loader__': <class '_frozen_importlib.BuiltinImporter'>, '__spec__': None, '__annotations__': {}, '__builtins__': <module 'builtins' (built-in)>, 'x': 10}
+```
+
+출력된 네임스페이스를 보면 `'x': 10`처럼 변수 `x`와 값 10이 저장되어 있다. 여기서는 전역 범위에서 네임스페이스를 출력했으므로 전역 네임스페이스를 가져온다.  
+마찬가지로 함수 안에서 `locals`를 사용할 수도 있다.
+
+```python
+>>> def foo():
+    x = 10
+    print(locals())
+...
+>>> foo()
+{'x': 10}
+```
+
+네임스페이스를 보면 `'x': 10`만 저장되어 있다. 이 때는 지역 범위에서 네임스페이스를 출력했으므로 지역 네임스페이스를 가져온다.
+
+<br><br>
+
+
+
+# UNIT 34 클래스 사용하기
+
+<br>
+
+특정 클래스의 인스턴스인지 확인하기
+-----------------------------------
+
+현재 인스턴스가 특정 클래스의 인스턴스인지 확인할 때는 `isinstance` 함수를 사용한다. 특정 클래스의 인스턴스가 맞으면 `True`, 아니면 `False`를 반환한다.
+
+* `isinstance(인스턴스, 클래스)`
+
+```python
+>>> class Person:
+    Pass
+...
+>>> james = Person()
+>>> isinstance(james, Person)
+True
+```
+
+`isinstance`는 주로 객체의 자료형을 판단할 때 사용한다. 예를 들어 팩토리얼 함수는 1부터 n까지 양의 정수를 차례대로 곱해야 하는데, 실수의 음의 정수는 계산할 수 없다. 이런 경우에 `isinstance`를 사용하여 숫자(객체)가 정수일 때만 계산하도록 만들 수 있다.
+
+```python
+def factorial(n):
+    if not isinstance(n, int) or n < 0:     # n이 정수가 아니거나 음수이면 함수를 끝냄
+        return None
+    if n == 1:
+        return 1
+    return n * factorial(n - 1)
+```
+
+<br>
+
+인스턴스를 생성한 뒤에 속성 추가하기, 특정 속성만 허용하기
+----------------------------------------------------------
+
+지금까지 클래스의 인스턴스 속성은 `__init__` 메서드에서 추가한 뒤 사용했다. 하지만 클래스로 인스턴스를 만든 뒤에도 `인스턴스.속성 = 값` 형식으로 속성을 계속 추가할 수 있다. 다음 `Person` 클래스는 빈 클래스이지만 인스턴스를 만든 뒤 `name` 속성을 추가한다.
+
+```python
+>>> class Person:
+    pass
+...
+>>> maria = Person()          # 인스턴스 생성
+>>> maria.name = '마리아'     # 인스턴스를 만든 뒤 속성 추가
+>>> maria.name
+'마리아'
+```
+
+이렇게 추가한 속성은 해당 인스턴스에만 생성된다. 따라서 클래스로 다른 인스턴스를 만들었을 때는 추가한 속성이 생성되지 않는다.
+
+```python
+>>> james = Person()    # james 인스턴스 생성
+>>> james.name          # maria 인스턴스에만 name 속성을 추가했으므로 james 인스턴스에는 name 속성이 없음
+Traceback (most recent call last):
+  File "<pyshell#14>", line 1, in <module>
+    james.name
+AttributeError: 'Person' object has no attribute 'name'
+```
+
+인스턴스는 생성한 뒤에 속성을 추가할 수 있으므로 `__init__` 메서드가 아닌 다른 메서드에서도 속성을 추가할 수 있다. 단, 이때는 메서드를 호출해야 속성이 생성된다.
+
+```python
+>>> class Person:
+    def greeting(self):
+        self.hello = '안녕하세요'     # greeting 메서드에서 hello 속성 추가
+...
+>>> maria = Person()
+>>> maria.hello                       # 아직 hello 속성이 없음
+Traceback (most recent call last):
+  File "<pyshell#21>", line 1, in <module>
+    maria.hello
+AttributeError: 'Person' object has no attribute 'hello'
+>>> maria.greeting()                  # greeting 메서드를 호출해야
+>>> maria.hello                       # hello 속성이 생성됨
+'안녕하세요'
+```
+
+인스턴스는 자유롭게 속성을 추가할 수 있지만 특정 속성만 허용하고 다른 속성은 제한하고 싶을 수도 있다. 이때는 클래스에서 `__slots__`에 허용할 속성 이름을 리스트로 넣어주면 된다. 특히 속성 이름은 반드시 문자열로 지정해준다.
+
+* `__slots__ = ['속성이름1', '속성이름2']`
+
+```python
+>>> class Person:
+    __slots__ = ['name', 'age']
+...
+>>> maria = Person()
+>>> maria.name = '마리아'                     # 허용된 속성
+>>> maria.age = 20                            # 허용된 속성
+>>> maria.address = '서울시 서초구 반포동'    # 허용되지 않은 속성은 추가할 때 에러가 발생함
+Traceback (most recent call last):
+  File "<pyshell#30>", line 1, in <module>
+    maria.address = '서울시 서초구 반포동'
+AttributeError: 'Person' object has no attribute 'address'
+```
+
+<br><br>
+
+
+
+# UNIT 35 클래스 속성과 정적, 클래스 매서드 사용하기
+
+<br>
+
